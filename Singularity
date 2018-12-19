@@ -4,11 +4,27 @@ From: ubuntu:16.04
 %help
   Help will go here
 
+  Special thanks goes to https://gist.github.com/lvisintini/e07abae48f099b913f9cf1c1f0fe43ba
+
 %labels
   Maintainer Chris Cotter
   Version v0.01
 
+%setup
+  mkdir ${SINGULARITY_ROOTFS}/opt/vsfm/
+
+%files
+  pmvs-2 /opt/vsfm
+  image_preseg /opt/vsfm
+  image_pair_list /opt/vsfm
+  clapack /opt/vsfm
+  bundler /opt/vsfm
+  requirements.txt /opt/vsfm
+  config /opt/vsfm
+
 %post
+
+  #######################################################################################
   # Install dependencies
   apt update
   apt install -y \
@@ -32,20 +48,22 @@ From: ubuntu:16.04
       libgsl-dev \
       glew-utils \
       libblas-dev \
-      liblapack-dev \
+      liblapack-dev
 
+  #Dev installs
+  apt install -y vim
 
+  #######################################################################################
   # Download and extract VisualSFM
   # http://ccwu.me/vsfm/index.html
-
   cd /opt
   wget http://ccwu.me/vsfm/download/VisualSFM_linux_64bit.zip
   unzip VisualSFM_linux_64bit.zip
   rm VisualSFM_linux_64bit.zip
 
+  #######################################################################################
   # Download and install SiftGPU in the appropriate directory
   # https://github.com/pitzer/SiftGPU
-
   cd /opt/vsfm
   wget https://github.com/pitzer/SiftGPU/archive/master.zip
   unzip master.zip
@@ -56,9 +74,9 @@ From: ubuntu:16.04
   make
   cp /opt/vsfm/SiftGPU/bin/libsiftgpu.so /opt/vsfm/bin
 
+  #######################################################################################
   # Download and install Multicore Bundle Adjustment ('pba') in the appropriate directory
   # http://grail.cs.washington.edu/projects/mcba/
-
   cd /opt/vsfm
   wget http://grail.cs.washington.edu/projects/mcba/pba_v1.0.5.zip
   unzip pba_v1.0.5.zip
@@ -70,19 +88,16 @@ From: ubuntu:16.04
   # echo -e "#include <stdlib.h>\n$(cat ~/vsfm/pba/src/pba/pba.h)" > ~/vsfm/pba/src/pba/pba.h
   #WITH CUDA
   #make
-  #cp /opt/vsfm/pba/bin/libpba.so /opt/vsfm/vsfm/bin/
+  #cp /opt/vsfm/pba/bin/libpba.so /optvsfm/bin/
   #WITHOUT CUDA
   mv makefile makefile_with_gpu
   mv makefile_no_gpu makefile
   make
+  cp /opt/vsfm/pba/bin/libpba_no_gpu.so /opt/vsfm/bin/libpba.so
 
-  # Download, hack and install PMVS in the appropriate directory
+  #######################################################################################
+  # Install modified version of pmvs-2
   # http://www.di.ens.fr/pmvs/documentation.html
-  cd /opt/vsfm
-  wget http://www.di.ens.fr/pmvs/pmvs-2.tar.gz
-  tar xvzf pmvs-2.tar.gz
-  rm pmvs-2.tar.gz
-
   cd /opt/vsfm/pmvs-2/program/main/
   cp /opt/vsfm/pmvs-2/program/main/mylapack.o /opt/vsfm/pmvs-2/program/main/mylapack.o.backup
   make clean
@@ -90,10 +105,9 @@ From: ubuntu:16.04
   make depend
   make
 
-
+  #######################################################################################
   # Download and install Graclus1.2
   # http://www.cs.utexas.edu/users/dml/Software/graclus.html
-
   cd /opt/vsfm
   wget http://www.cs.utexas.edu/users/dml/Software/graclus1.2.tar.gz
   tar xvzf graclus1.2.tar.gz
@@ -102,7 +116,7 @@ From: ubuntu:16.04
   cd /opt/vsfm/graclus1.2
   make
 
-
+  #######################################################################################
   # Download, hack and install CMVS in the appropriate directory
   # http://www.di.ens.fr/cmvs/documentation.html
   cd /opt/vsfm
@@ -129,11 +143,13 @@ From: ubuntu:16.04
   cp /opt/vsfm/cmvs/program/main/pmvs2 /opt/vsfm/bin
   cp /opt/vsfm/cmvs/program/main/genOption /opt/vsfm/bin
 
-
+  #######################################################################################
+  # Compile vsfm
   cd /opt/vsfm
   make
-  chmod a+x /opt/vsfm/bin/VisualSFM
-  
+  mv /opt/vsfm/config/nv.ini /opt/vsfm/bin/
+  chmod -R a+rwx /opt/vsfm
+
 %environment
   PATH=$PATH:/opt/vsfm/bin/
   export PATH
