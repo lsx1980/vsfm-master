@@ -13,7 +13,7 @@ vsfm/bin/sift: vsfm
 	#wget http://www.vlfeat.org/download/vlfeat-0.9.19-bin.tar.gz
 	#tar xzf vlfeat-0.9.19-bin.tar.gz
 	#cp $(ROOT_DIR)/vlfeat-0.9.19/bin/glnxa64/* $(ROOT_DIR)/vsfm/bin/
-	
+
 	wget http://www.vlfeat.org/download/vlfeat-0.9.19.tar.gz
 	tar xzf vlfeat-0.9.19.tar.gz
 	make -C vlfeat-0.9.19
