@@ -10,9 +10,9 @@ vsfm/bin/libsiftgpu.so: vsfm
 	cp $(ROOT_DIR)/SiftGPU-master/bin/libsiftgpu.so $(ROOT_DIR)/vsfm/bin
 
 vsfm/bin/sift: vsfm
-	wget http://www.vlfeat.org/download/vlfeat-0.9.21-bin.tar.gz
-	tar xzf vlfeat-0.9.21-bin.tar.gz
-	cp $(ROOT_DIR)/vlfeat-0.9.21/bin/glnxa64/* $(ROOT_DIR)/vsfm/bin/
+	wget http://www.vlfeat.org/download/vlfeat-0.9.19-bin.tar.gz
+	tar xzf vlfeat-0.9.19-bin.tar.gz
+	cp $(ROOT_DIR)/vlfeat-0.9.19/bin/glnxa64/* $(ROOT_DIR)/vsfm/bin/
 
 vsfm:
 	wget http://ccwu.me/vsfm/download/VisualSFM_linux_64bit.zip
