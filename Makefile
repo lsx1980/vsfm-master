@@ -27,7 +27,7 @@ vsfm:
 	wget http://ccwu.me/vsfm/download/VisualSFM_linux_64bit.zip
 	unzip VisualSFM_linux_64bit.zip
 	rm VisualSFM_linux_64bit.zip
-	
+
 vsfm/bin/libpba.so: vsfm
 	wget http://grail.cs.washington.edu/projects/mcba/pba_v1.0.5.zip
 	unzip pba_v1.0.5.zip
