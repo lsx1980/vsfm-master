@@ -1,114 +1,32 @@
-# SFM for 3D root model reconstructure
+SFM for 3D root model reconstruction
 
-### Running With Singularity
-The singularity container is available on [Singularity Hub](https://www.singularity-hub.org)
-and can be run using
-```bash
-singularity exec --overlay file.img shub://lsx1980/vsfm-master [VisualSFM paramaters]
-```
+The software package was integrated as a module at PlantIT website at : https://portnoy.cyverse.org/. (Collaborate with Cyverse https://www.cyverse.org/ ) . Users are welcomed to registered as an user to try this package via PlantIT website.
 
-where [VisualSFM paramaters] are the input parameters for VisualSFM. Using the local examples:
+The software package was also available at Dockerhub (https://hub.docker.com/r/computationalplantscience/3d-model-reconstruction) for advanced users to run locally via singularity at Linux environment:
 
-### Creat file image for program to store temprary files
-dd if=/dev/zero of=file.img bs=1k count=50000
+Steps to run this package in container locally:
+    1. Install singularity container version 3.6 following the instruction at https://sylabs.io/guides/3.6/user-guide/quick_start.html#quick-installation-steps
+    2. Run the container:
+Once singularity was successfully installed, the container can be executed using
+singularity exec --home $PWD/ –bind /$PWD:/opt/code/vsfm/bin/temp,/$PWD:/opt/code/vsfm/bin/log docker://computationalplantscience/3d-model-reconstruction /opt/code/vsfm/bin/VisualSFM sfm+pmvs /$PATH_TO_IMAGE_FOLDER/
+"$PWD" : can be replaced by user’s local path for store temporary files. $PATH_TO_IMAGE_FOLDER/: can be replaced by user’s image data folder.
+    3. Collect the 3D model result After the container was executed successfully with image data files, user should be able to see output at command window like this: 
+''' Save to /$PATH_TO_IMAGE_FOLDER/vsfm.nvm ... done Save /$PATH_TO_IMAGE_FOLDER/vsfm.0.ply ...done
+VisualSFM 3D reconstruction, finished Totally 15.000 seconds used
+LogFile: /opt/code/vsfm/bin/log/[20_12_17][15_26_12][690].log '''
+The 3D model was stored as point cloud in ply format at /$PATH_TO_IMAGE_FOLDER/vsfm.0.ply.
 
-mkfs -t ext3 file.img
 
-or
-
-singularity image.create --size 50 file.img
-
-```bash
-singularity exec --overlay file.img shub://lsx1980/vsfm-master /opt/code/vsfm/bin/VisualSFM sfm+pairs /$root/$path_to_your_pairlist_file/
-```
-
-```bash
-singularity exec --overlay file.img shub://lsx1980/vsfm-master /opt/code/vsfm/bin/VisualSFM sfm+pmvs /$root/$path_to_your_image_file_folder/
-```
-
-## Compiling
-
-### Required Dependencies
-GTK toolkit development files, freeglut development files, libdevil development
-files.
-
-On Ubuntu:
-
-```bash
-apt update
-  apt install -y \
-      wget \
-      build-essential \
-      unzip \
-      glew-utils \
-      imagemagick \
-      libgtk2.0-dev \
-      libglew-dev \
-      libdevil-dev \
-      libboost-all-dev \
-      libatlas-cpp-0.6-dev \
-      libatlas-dev \
-      libatlas-base-dev \
-      liblapack3 \
-      libblas3 \
-      libblas-dev \
-      libcminpack-dev \
-      libgfortran3 \
-      libmetis-edf-dev \
-      libparmetis-dev \
-      libjpeg-turbo8 \
-      libgsl-dev \
-      freeglut3-dev
-```
-
-### Building
-
-#### Locally
-The included Makefile will download and compile the necessary components not included in "Required Dependencies".
-
-```bash
-make all
-```
-
-#### Singulairty
-The singularity container can be built using
-
-```bash
-singularity build --writable vsfm.img Singularity
-```
-
-Then run using
-
-```bash
-singularity exec --writable vsfm.img /opt/code/vsfm/bin/VisualSFM  sfm+pmvs /$root/$path_to_your_image_file_folder/
-```
-
-## Running Locally
-```bash
-./opt/code/vsfm/bin/VisualSFM sfm+pairs /$root/$path_to_your_pairlist_file/
-```
-
-```bash
-./opt/code/vsfm/bin/VisualSFM sfm+pmvs /$root/$path_to_your_image_file_folder/
-```
-
-## Author
-suxing liu(suxingliu@gmail.com)
-reference:
-[Anders Damsgaard](mailto:adamsgaard@ucsd.edu) with contributions by Caleb Adams
-and Connor P Doherty.
-Changchang Wu ( wucc1130@gmail.com )
-
-Singularity container maintained by [Chris Cotter](http://github.com/cottersci).
-
-Singularity container overlay issue solved by [Saravanaraj Ayyampalayam] (https://github.com/raj76) (mailto:raj76@uga.edu)
-
+Author
+suxing liu(suxingliu@gmail.com) reference: Anders Damsgaard with contributions by Caleb Adams and Connor P Doherty. Changchang Wu ( wucc1130@gmail.com )
+Singularity container was maintained by Wesley Paul Bonelli. it was deployed to Plant IT website by Wesley Paul Bonelli (wbonelli@uga.edu).
+Singularity container overlay issues were solved by [Saravanaraj Ayyampalayam] (https://github.com/raj76) (mailto:raj76@uga.edu)
 Special thanks to Chris Cotter building the container recipe for testing and debugging.
 
-## Todo
-- VisualSFM is built without CUDA acceleration. Add optional GPU build.
-- Add support for CMVS/PMVS2
-- support GPU based SIFT feature matching
 
-## License
+Todo
+    • VisualSFM is built without CUDA acceleration. Add optional GPU build. 
+    • support GPU based SIFT feature matching 
+    
+License
 GNU Public License
